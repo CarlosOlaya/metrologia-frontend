@@ -8,11 +8,83 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelBtn = document.getElementById('cancel-btn');
     const formCard = document.getElementById('form-card');
     const toggleFormBtn = document.getElementById('toggle-form-btn');
+    const historyBtn = document.getElementById('history-btn');
+
     let summaryChart = null; // Variable para guardar la instancia del gráfico
 
     const API_URL = "https://metrologia-backend-6xdc.onrender.com";
 
     let scheduleData = [];
+    async function exportarHistorialCompleto() {
+        try {
+            const res = await fetch(`${API_URL}/cronograma/historial`);
+            const historial = await res.json();
+
+            if (!Array.isArray(historial) || historial.length === 0) {
+                alert("No hay historial disponible.");
+                return;
+            }
+
+            let excelData = [];
+
+            historial.forEach((version, index) => {
+                const fecha = new Date(version.fecha).toLocaleString('es-CO');
+
+                // Encabezado de la versión
+                excelData.push([`CRONOGRAMA REGISTRADO EL: ${fecha}`]);
+                excelData.push([]); // línea vacía
+
+                // Encabezados reales
+                excelData.push([
+                    "ID", "Nombre Equipo", "Ubicación",
+                    "Mantenimiento", "Proveedor", "Días", "Estado",
+                    "Calibración", "Proveedor", "Días", "Estado",
+                    "Calificación", "Proveedor", "Días", "Estado",
+                    "Observaciones"
+                ]);
+
+                // Filas
+                version.tabla.forEach(item => {
+                    const mant = calculateStatus(item.mantenimiento);
+                    const cali = calculateStatus(item.calibracion);
+                    const calif = calculateStatus(item.calificacion);
+
+                    excelData.push([
+                        item.id,
+                        item.nombreEquipo,
+                        item.ubicacion,
+                        item.mantenimiento || "N/A",
+                        item.proveedorMantenimiento || "",
+                        mant.days,
+                        mant.status,
+                        item.calibracion || "N/A",
+                        item.proveedorCalibracion || "",
+                        cali.days,
+                        cali.status,
+                        item.calificacion || "N/A",
+                        item.proveedorCalificacion || "",
+                        calif.days,
+                        calif.status,
+                        item.observaciones || ""
+                    ]);
+                });
+
+                excelData.push([]); 
+                excelData.push([]); 
+            });
+
+            // Crear hoja
+            const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Historial");
+
+            XLSX.writeFile(workbook, "Historial_Cronogramas.xlsx");
+
+        } catch (error) {
+            console.error("Error exportando historial:", error);
+            alert("Error exportando historial");
+        }
+    }
 
     async function cargarDesdeBackend() {
         try {
@@ -473,6 +545,9 @@ const exportToExcel = () => {
     cancelBtn.addEventListener('click', resetForm);
     toggleFormBtn.addEventListener('click', toggleForm);
     document.getElementById('save-db-btn').addEventListener('click', guardarEnBaseDeDatos);
+
+    historyBtn.addEventListener("click", exportarHistorialCompleto);
+
 
     // Renderizar la tabla por primera vez al cargar la página
     cargarDesdeBackend();
