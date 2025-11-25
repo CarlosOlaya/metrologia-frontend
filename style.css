@@ -1,0 +1,222 @@
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: #f4f7f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 95%;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #34495e; /* Fondo azul oscuro para todo el encabezado */
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.logo {
+    max-height: 70px; /* Ajusta este valor según el tamaño de tu logo */
+    margin-right: 20px;
+    background-color: #fff; /* Fondo blanco para el logo */
+    padding: 5px;
+    border-radius: 4px;
+}
+
+h1 {
+    color: #fff; /* Texto blanco para contraste */
+    text-align: center;
+    line-height: 1.5;
+    font-size: 1rem; /* Tamaño de letra reducido (16px) */
+    flex-grow: 1; /* Permite que el título ocupe el espacio disponible */
+}
+
+h2 {
+    color: #2c3e50;
+    text-align: center;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.form-container {
+    text-align: left; /* Mueve el botón a la izquierda */
+    margin-bottom: 20px;
+}
+
+#toggle-form-btn {
+    width: auto;
+    padding: 12px 25px;
+    font-weight: bold;
+    border-radius: 8px; /* Esquinas más redondeadas */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Sombra sutil */
+    width: auto; /* Ancho automático basado en el contenido */
+}
+
+.form-card {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+.btn-success {
+    background-color: #2ecc71;
+}
+
+.btn-success:hover {
+    background-color: #27ae60;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+.btn-secondary {
+    background-color: #7f8c8d;
+}
+
+.btn-secondary:hover {
+    background-color: #6c7a7b;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#search-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 250px;
+}
+
+.table-container {
+    overflow-x: auto; /* Añade desplazamiento horizontal si la tabla es muy ancha */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed; /* Ayuda a controlar el ancho de las columnas */
+}
+
+th, td {
+    padding: 8px 5px; /* Reduce el padding horizontal y vertical */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 12px; /* Tamaño de letra reducido para el contenido de la tabla */
+    word-break: break-word; /* Permite que el texto largo se divida */
+}
+
+.summary-box {
+    position: relative;
+    margin: 0; /* Alinea el contenedor a la izquierda */
+    height: 120px; /* Altura reducida */
+    width: 240px; /* Ancho reducido */
+    margin-bottom: 20px;
+}
+
+thead th {
+    background-color: #34495e;
+    color: #fff;
+    font-size: 13px; /* Tamaño de letra para el encabezado de la tabla */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.status.vencido { background-color: #e74c3c; } /* Rojo */
+.status.proximo { background-color: #f39c12; } /* Naranja */
+.status.vigente { background-color: #2ecc71; } /* Verde */
+.status.no-aplica { background-color: #bdc3c7; color: #333; } /* Gris claro */
+
+.group-header td {
+    background-color: #eaf2f8; /* Un azul claro */
+    color: #1b4f72;
+    font-weight: bold;
+    text-align: center;
+    border-top: 2px solid #34495e;
+}
+
+.action-select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    width: 100%;
+}

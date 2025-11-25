@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma de Metrología y Mantenimiento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Librería para exportar a Excel (SheetJS) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Librería para Gráficos (Chart.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+</head>
+<style>
+    /* Estilo para la fila de subtítulo "EQUIPOS BACK-UP" */
+    #schedule-table tbody tr.backup-header td,
+    #schedule-table tbody tr.group-header td {
+        background-color: #6c757d; /* Gris oscuro */
+        color: white;
+        font-weight: bold;
+        text-align: center;
+    }
+    /* Estilo para reducir el tamaño de la fuente de los estados */
+    .estado-texto {
+        font-size: 0.85rem; /* Ajusta este valor como necesites (ej: 12px, 0.8rem) */
+        font-weight: bold; /* Mantenemos la negrita para que resalte */
+    }
+</style>
+<body>
+
+    <div class="container">
+        <header class="page-header">
+            <img src="imagenes/logo.png" alt="Logo de la Compañía" class="logo">
+            <h1>
+                MACROPROCESO: PROYECCIÓN SOCIAL<br>
+                PROCESO: PROYECTOS ESPECIALES<br>
+                FORMATO: CRONOGRAMA MANTENIMIENTO, CALIBRACIÓN Y CALIFICACIÓN EQUIPOS ESTUDIOS BIOFARMACÉUTICOS
+            </h1>
+        </header>
+
+        <div class="form-container">
+            <button id="toggle-form-btn" class="btn btn-success">+ Añadir/Modificar Equipo</button>
+        </div>
+        <div id="form-card" class="card form-card" style="display: none;">
+            <h2 id="form-title">Añadir o Modificar Equipo</h2>
+            <form id="add-item-form">
+                <div class="form-group">
+                    <label for="item-id">ID:</label>
+                    <input type="number" id="item-id" placeholder="Ej: 15322" required>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" id="edit-item-id">
+                    <label for="nombre-equipo">Nombre del Equipo:</label>
+                    <input type="text" id="nombre-equipo" placeholder="Ej: Balanza Analítica" required>
+                </div>
+                <div class="form-group">
+                    <label for="ubicacion">Ubicación:</label>
+                    <input type="text" id="ubicacion" placeholder="Ej: Laboratorio de Calidad" required>
+                </div>
+                <div class="form-group">
+                    <label for="proveedor-mantenimiento">Proveedor Mantenimiento:</label>
+                    <input type="text" id="proveedor-mantenimiento" placeholder="Nombre del proveedor">
+                </div>
+                <div class="form-group">
+                    <label for="mantenimiento-date">Próximo Mantenimiento:</label>
+                    <input type="date" id="mantenimiento-date">
+                </div>
+                <div class="form-group">
+                    <label for="proveedor-calibracion">Proveedor Calibración:</label>
+                    <input type="text" id="proveedor-calibracion" placeholder="Nombre del proveedor">
+                </div>
+                <div class="form-group">
+                    <label for="calibracion-date">Próxima Calibración:</label>
+                    <input type="date" id="calibracion-date">
+                </div>
+                <div class="form-group">
+                    <label for="proveedor-calificacion">Proveedor Calificación:</label>
+                    <input type="text" id="proveedor-calificacion" placeholder="Nombre del proveedor">
+                </div>
+                <div class="form-group">
+                    <label for="calificacion-date">Próxima Calificación:</label>
+                    <input type="date" id="calificacion-date">
+                </div>
+                <div class="form-group">
+                    <label for="observaciones">Observaciones:</label>
+                    <textarea id="observaciones" rows="3" placeholder="Añadir observaciones..."></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" id="submit-btn" class="btn btn-primary">Añadir al Cronograma</button>
+                    <button type="button" id="cancel-btn" class="btn btn-secondary" style="display: none;">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Cronograma de mantenimiento y metrología</h2>
+            <div class="summary-box">
+                <canvas id="summary-chart"></canvas>
+            </div>
+            <div class="actions">
+                <input type="text" id="search-input" placeholder="Buscar por nombre o ubicación...">
+                <button id="export-btn" class="btn btn-success">Exportar a Excel</button>
+                <button id="save-db-btn" class="btn btn-success">💾 GuardarAtlas</button>
+
+            </div>
+            <div class="table-container">
+                <table id="schedule-table">
+                    <thead>
+                         <tr>
+                            <th rowspan="2">ID</th>
+                            <th rowspan="2">Nombre Equipo</th>
+                            <th rowspan="2">Ubicación</th>
+                            <th colspan="4">Mantenimiento</th>
+                            <th colspan="4">Calibración</th>
+                            <th colspan="4">Calificación</th>
+                            <th rowspan="2">Observaciones</th>
+                            <th rowspan="2">Acciones</th>
+                        </tr>
+                        <tr>
+                            <th>Próxima Fecha</th>
+                            <th>Proveedor</th>
+                            <th>Días Restantes</th>
+                            <th>Estado</th>
+                            <th>Próxima Fecha</th>
+                            <th>Proveedor</th>
+                            <th>Días Restantes</th>
+                            <th>Estado</th>
+                            <th>Próxima Fecha</th>
+                            <th>Proveedor</th>
+                            <th>Días Restantes</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Las filas se insertarán aquí con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
