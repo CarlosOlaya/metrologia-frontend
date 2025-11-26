@@ -86,22 +86,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function cargarDesdeBackend() {
+async function cargarDesdeBackend() {
+    try {
+        const res = await fetch(`${API_URL}/cronograma`);
+
+        // comprobar si viene JSON REAL
+        const text = await res.text();
+        let data;
+
         try {
-            const res = await fetch(`${API_URL}/cronograma`);
-            const data = await res.json();
-
-            scheduleData = data.tabla || [];
-
-            console.log("Datos cargados desde backend:", scheduleData);
-
-            // Render inicial de la tabla
-            renderTable(scheduleData);
-
-        } catch (error) {
-            console.error("Error cargando cronograma:", error);
+            data = JSON.parse(text); 
+        } catch {
+            console.log("⚠ Backend no responde JSON (Render está despertando)");
+            return; // no intentamos renderizar nada
         }
+
+        scheduleData = data.tabla || [];
+        renderTable(scheduleData);
+
+    } catch (error) {
+        console.error("Error cargando cronograma:", error);
     }
+}
 
     async function guardarEnBaseDeDatos() {
     try {
